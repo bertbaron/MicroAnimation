@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Adafruit_SSD1306.h>
-#include <compressed_animation.h>
+#include <Animation.h>
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 32
