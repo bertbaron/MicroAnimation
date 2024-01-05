@@ -1,4 +1,4 @@
-# [Compressed Animations for Arduino]
+# Arduino Library to play compressed Animations
 
 [![](https://img.shields.io/badge/Available_in_the_Arduino_Library_Manager-2ea44f)](<Link>)
 
