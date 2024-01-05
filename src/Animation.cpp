@@ -1,4 +1,4 @@
-#include "compressed_animation.h"
+#include "Animation.h"
 
 #include <Adafruit_GFX.h>
 #include <Arduino.h>

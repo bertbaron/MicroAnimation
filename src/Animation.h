@@ -1,5 +1,5 @@
-#ifndef compressed_animation_h
-#define compressed_animation_h
+#ifndef animation_h
+#define animation_h
 #include <Adafruit_GFX.h>
 
 #include "Arduino.h"
