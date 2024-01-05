@@ -1,29 +1,9 @@
-# [Name]
+# [Compressed Animations for Arduino]
 
 [![](https://img.shields.io/badge/Available_in_the_Arduino_Library_Manager-2ea44f)](<Link>)
 
-## Get Started
+Plays compressed monochrome animations on Adafruit displays. Originally added to be able to play animated Icons from https://animator.wokwi.com/ on small devices like the Arduino Micro. 
 
-### Import
+A site will be created to compress animations from https://animator.wokwi.com/ and potentially other sources.
 
-1. Look up `<Name>` in the Library Manager and install the latest version
-2. Insert the following snippet
- 
-```ino
-#include <example.h>
-```
-
-### Setup
-
-```ino
-<Setup>
-```
-**Parameters**
-
-* `i` Index
-
-**Example**
-
-```ino
-<Example>
-```
+Currently only tested with the SSD1306. Feature and pull requests for other displays are welcome.

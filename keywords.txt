@@ -1,1 +1,33 @@
+#######################################
+# Syntax Coloring Map For
+# Compressed Animation
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Animation	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+getFrameCount	KEYWORD2
+getWidth	KEYWORD2
+getHeight	KEYWORD2
+drawFrame	KEYWORD2
+setFrameDelay	KEYWORD2
+setPosition	KEYWORD2
+setColor	KEYWORD2
+setBackgroundColor	KEYWORD2
+play	KEYWORD2
+start	KEYWORD2
+run	KEYWORD2
+isFinished	KEYWORD2
+onFinish	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
 
