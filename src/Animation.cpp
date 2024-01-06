@@ -77,7 +77,7 @@ void Animation::_animationFinished() {
   }
 }
 
-bool Animation::run() {
+bool Animation::update() {
   if (_frame < 0) {
     return false;
   }
@@ -93,7 +93,7 @@ bool Animation::run() {
   return !_finished;
 }
 
-bool Animation::isFinished() {
+bool Animation::finished() {
   bool finished = _finished;
   _finished = false;
   return finished;

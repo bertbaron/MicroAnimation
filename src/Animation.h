@@ -29,15 +29,19 @@ class Animation {
    */
 
   void start();
+
   /*!
-   * @brief Draw the next frame of the animation.
-   * @return True if the animation is still running. 
+   * @brief Updates the animation, potentially drawing a new frame. 
+   *        Does nothing if the animation is not running. 
+   *        This is typically called in the loop() function.
+   * @return True if the animation is running. 
    */
-  bool run();
+  bool update();
+
   /*!
    * @brief Check if the animation is finished and resets the 'finished' flag.
    */
-  bool isFinished();
+  bool finished();
 
   /*!
    * @brief Specifies a callback-function that is called when the animation is finished.
