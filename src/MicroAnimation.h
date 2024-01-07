@@ -4,11 +4,12 @@
 
 #include "Arduino.h"
 
-class MicroAnimation {
- public:
+class MicroAnimation
+{
+public:
   MicroAnimation(const uint8_t *data, Adafruit_GFX *display, uint16_t x = 0, uint16_t y = 0,
-            uint16_t color = 1);
-            
+                 uint16_t color = 1);
+
   int getFrameCount();
   int getWidth();
   int getHeight();
@@ -25,30 +26,53 @@ class MicroAnimation {
   void play();
 
   /*
-   Functions for non-blocking animation 
+   Functions for non-blocking animation
    */
 
-  void start();
+  /*!
+   * @brief Starts the animation.
+   * @param loop If true, the animation will keep looping until stop() is called.
+   */
+  void start(bool loop = false);
 
   /*!
-   * @brief Updates the animation, potentially drawing a new frame. 
-   *        Does nothing if the animation is not running. 
+   * @brief Stops the animation, optionally waiting for the current loop cycle to finish.
+   *        The animation will be considered finished and the optional callback will be called.
+   * @param waitForLoopCycle If true, the animation will stop after the current loop cycle has finished.
+   */
+  void stop(bool waitForLoopCycle = false);
+
+  /*!
+   * @brief Stops the animation, optionally waiting for the current loop cycle to finish.
+   *        The finished flag will not be set and the optional callback will not be called.
+   * @param waitForLoopCycle If true, the animation will stop after the current loop cycle has finished.
+   */
+  void abort(bool waitForLoopCycle = false);
+
+  /*!
+   * @brief Updates the animation, potentially drawing a new frame.
+   *        Does nothing if the animation is not running.
    *        This is typically called in the loop() function.
-   * @return True if the animation is running. 
+   * @return True if the animation is running.
    */
   bool update();
 
   /*!
-   * @brief Check if the animation is finished and resets the 'finished' flag.
+   * @brief Check if the animation is running.
    */
-  bool finished();
+  bool isRunning();
+
+  /*!
+   * @brief Check if the animation is finished normally (not aborted) during the last update() call
+   */
+  bool isFinished();
 
   /*!
    * @brief Specifies a callback-function that is called when the animation is finished.
    */
   void onFinish(void (*finishedCallback)());
 
- private:
+private:
   const uint8_t *_data;
   Adafruit_GFX *_display;
   uint16_t _x, _y;
@@ -60,9 +84,12 @@ class MicroAnimation {
   int _frame;
   uint32_t _lastFrameTime;
   bool _finished;
+  bool _loop;
+  bool _abort;
   void (*_finishedCallback)();
 
   void _animationFinished();
+  void _reset(bool finished);
 };
 
 #endif

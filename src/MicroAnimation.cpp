@@ -7,13 +7,13 @@
 #include <Adafruit_SSD1306.h>
 #endif
 
-void doDrawFrame(const uint8_t* data, Adafruit_GFX* display, int16_t x, int16_t y, int16_t w,
+void doDrawFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16_t y, int16_t w,
                  int16_t h, uint16_t bgColor, uint16_t color);
-void doDrawRleFrame(const uint8_t* data, Adafruit_GFX* display, int16_t x, int16_t y, int16_t w,
+void doDrawRleFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16_t y, int16_t w,
                     int16_t h, uint16_t bgColor, uint16_t color);
 
-MicroAnimation::MicroAnimation(const uint8_t* data, Adafruit_GFX* display, uint16_t x, uint16_t y,
-                     uint16_t color) {
+MicroAnimation::MicroAnimation(const uint8_t *data, Adafruit_GFX *display, uint16_t x, uint16_t y,
+                               uint16_t color) {
   _data = data;
   _display = display;
   _x = x;
@@ -47,7 +47,7 @@ void MicroAnimation::drawFrame(int frameNumber) {
   doDrawFrame(_data + dataOffset, _display, _x, _y, getWidth(), getHeight(), _backgroundColor,
               _color);
 #ifdef _Adafruit_SSD1306_H_
-    ((Adafruit_SSD1306*)_display)->display();
+  ((Adafruit_SSD1306 *)_display)->display();
 #endif
 }
 
@@ -63,21 +63,15 @@ void MicroAnimation::play() {
   }
 }
 
-void MicroAnimation::start() {
+void MicroAnimation::start(bool loop) {
   _frame = 0;
   _lastFrameTime = millis();
   _finished = false;
-}
-
-void MicroAnimation::_animationFinished() {
-  _frame = -1;
-  _finished = true;
-  if (_finishedCallback != NULL) {
-    _finishedCallback();
-  }
+  _loop = loop;
 }
 
 bool MicroAnimation::update() {
+  _finished = false;
   if (_frame < 0) {
     return false;
   }
@@ -86,18 +80,54 @@ bool MicroAnimation::update() {
     drawFrame(_frame++);
     _lastFrameTime = now;
     if (_frame >= getFrameCount()) {
-      _animationFinished();
-
+      if (_loop) {
+        _frame = 0;
+      } else {
+        if (_abort) {
+          _reset(false);
+        } else {
+          _animationFinished();
+        }
+      }
     }
   }
   return !_finished;
 }
 
-bool MicroAnimation::finished() {
-  bool finished = _finished;
-  _finished = false;
-  return finished;
+void MicroAnimation::stop(bool waitForLoopCycle) {
+  if (waitForLoopCycle) {
+    _loop = false;
+  } else if (_frame >= 0) {
+    _animationFinished();
+  }
 }
+
+void MicroAnimation::abort(bool waitForLoopCycle) {
+  if (waitForLoopCycle) {
+    _loop = false;
+    _abort = true;
+  } else {
+    _reset(false);
+  }
+}
+
+void MicroAnimation::_animationFinished() {
+  if (_finishedCallback != NULL) {
+    _finishedCallback();
+  }
+  _reset(true);
+}
+
+void MicroAnimation::_reset(bool finished) {
+  _frame = -1;
+  _finished = finished;
+  _loop = false;
+  _abort = false;
+}
+
+bool MicroAnimation::isRunning() { return _frame >= 0; }
+
+bool MicroAnimation::isFinished() { return _finished; }
 
 void MicroAnimation::onFinish(void (*finishedCallback)()) { _finishedCallback = finishedCallback; }
 
@@ -116,7 +146,7 @@ void MicroAnimation::onFinish(void (*finishedCallback)()) { _finishedCallback = 
  * Frame format:
  * 1 byte: frame type | initial color
  */
-void doDrawFrame(const uint8_t* data, Adafruit_GFX* display, int16_t x, int16_t y, int16_t w,
+void doDrawFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16_t y, int16_t w,
                  int16_t h, uint16_t bgColor, uint16_t color) {
   uint8_t type = pgm_read_byte(data);
   if ((type & FRAME_TYPE_MASK) == FRAME_TYPE_UNCOMPRESSED) {
@@ -127,7 +157,7 @@ void doDrawFrame(const uint8_t* data, Adafruit_GFX* display, int16_t x, int16_t 
   }
 }
 
-void doDrawRleFrame(const uint8_t* data, Adafruit_GFX* display, int16_t x, int16_t y, int16_t w,
+void doDrawRleFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16_t y, int16_t w,
                     int16_t h, uint16_t bgColor, uint16_t drawColor) {
   uint8_t type = pgm_read_byte(data);
   const bool useDeltaCompression = (type & FRAME_TYPE_MASK) == FRAME_TYPE_RLE_DELTA;
