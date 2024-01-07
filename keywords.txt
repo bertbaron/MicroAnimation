@@ -1,13 +1,13 @@
 #######################################
 # Syntax Coloring Map For
-# Compressed Animation
+# MicroAnimation
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-Animation	KEYWORD1
+MicroAnimation	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)

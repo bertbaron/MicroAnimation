@@ -1,4 +1,4 @@
-#include "Animation.h"
+#include "MicroAnimation.h"
 
 #include <Adafruit_GFX.h>
 #include <Arduino.h>
@@ -12,7 +12,7 @@ void doDrawFrame(const uint8_t* data, Adafruit_GFX* display, int16_t x, int16_t 
 void doDrawRleFrame(const uint8_t* data, Adafruit_GFX* display, int16_t x, int16_t y, int16_t w,
                     int16_t h, uint16_t bgColor, uint16_t color);
 
-Animation::Animation(const uint8_t* data, Adafruit_GFX* display, uint16_t x, uint16_t y,
+MicroAnimation::MicroAnimation(const uint8_t* data, Adafruit_GFX* display, uint16_t x, uint16_t y,
                      uint16_t color) {
   _data = data;
   _display = display;
@@ -27,22 +27,22 @@ Animation::Animation(const uint8_t* data, Adafruit_GFX* display, uint16_t x, uin
   _lastFrameTime = 0;
 }
 
-int Animation::getFrameCount() { return pgm_read_byte(_data); }
+int MicroAnimation::getFrameCount() { return pgm_read_byte(_data); }
 
-int Animation::getWidth() { return pgm_read_byte(_data + 1); }
+int MicroAnimation::getWidth() { return pgm_read_byte(_data + 1); }
 
-int Animation::getHeight() { return pgm_read_byte(_data + 2); }
+int MicroAnimation::getHeight() { return pgm_read_byte(_data + 2); }
 
-void Animation::setPosition(uint16_t x, uint16_t y) {
+void MicroAnimation::setPosition(uint16_t x, uint16_t y) {
   _x = x;
   _y = y;
 }
 
-void Animation::setColor(uint16_t color) { _color = color; }
-void Animation::setBackgroundColor(uint16_t color) { _backgroundColor = color; }
-void Animation::setFrameDelay(uint16_t delay) { _frameDelay = delay; }
+void MicroAnimation::setColor(uint16_t color) { _color = color; }
+void MicroAnimation::setBackgroundColor(uint16_t color) { _backgroundColor = color; }
+void MicroAnimation::setFrameDelay(uint16_t delay) { _frameDelay = delay; }
 
-void Animation::drawFrame(int frameNumber) {
+void MicroAnimation::drawFrame(int frameNumber) {
   uint16_t dataOffset = pgm_read_word(_data + 3 + frameNumber * 2);
   doDrawFrame(_data + dataOffset, _display, _x, _y, getWidth(), getHeight(), _backgroundColor,
               _color);
@@ -51,7 +51,7 @@ void Animation::drawFrame(int frameNumber) {
 #endif
 }
 
-void Animation::play() {
+void MicroAnimation::play() {
   for (int i = 0; i < getFrameCount(); i++) {
     uint16_t exp = millis() + _frameDelay;
     drawFrame(i);
@@ -63,13 +63,13 @@ void Animation::play() {
   }
 }
 
-void Animation::start() {
+void MicroAnimation::start() {
   _frame = 0;
   _lastFrameTime = millis();
   _finished = false;
 }
 
-void Animation::_animationFinished() {
+void MicroAnimation::_animationFinished() {
   _frame = -1;
   _finished = true;
   if (_finishedCallback != NULL) {
@@ -77,7 +77,7 @@ void Animation::_animationFinished() {
   }
 }
 
-bool Animation::update() {
+bool MicroAnimation::update() {
   if (_frame < 0) {
     return false;
   }
@@ -93,13 +93,13 @@ bool Animation::update() {
   return !_finished;
 }
 
-bool Animation::finished() {
+bool MicroAnimation::finished() {
   bool finished = _finished;
   _finished = false;
   return finished;
 }
 
-void Animation::onFinish(void (*finishedCallback)()) { _finishedCallback = finishedCallback; }
+void MicroAnimation::onFinish(void (*finishedCallback)()) { _finishedCallback = finishedCallback; }
 
 #define BG 0
 #define FG 1

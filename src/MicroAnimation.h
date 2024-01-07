@@ -4,9 +4,9 @@
 
 #include "Arduino.h"
 
-class Animation {
+class MicroAnimation {
  public:
-  Animation(const uint8_t *data, Adafruit_GFX *display, uint16_t x = 0, uint16_t y = 0,
+  MicroAnimation(const uint8_t *data, Adafruit_GFX *display, uint16_t x = 0, uint16_t y = 0,
             uint16_t color = 1);
             
   int getFrameCount();
