@@ -27,11 +27,11 @@ MicroAnimation::MicroAnimation(const uint8_t *data, Adafruit_GFX *display, uint1
   _lastFrameTime = 0;
 }
 
-int MicroAnimation::getFrameCount() { return pgm_read_byte(_data); }
+int MicroAnimation::getFrameCount() { return pgm_read_byte(_data + 1); }
 
-int MicroAnimation::getWidth() { return pgm_read_byte(_data + 1); }
+int MicroAnimation::getWidth() { return pgm_read_byte(_data + 2); }
 
-int MicroAnimation::getHeight() { return pgm_read_byte(_data + 2); }
+int MicroAnimation::getHeight() { return pgm_read_byte(_data + 3); }
 
 void MicroAnimation::setPosition(uint16_t x, uint16_t y) {
   _x = x;
@@ -43,7 +43,7 @@ void MicroAnimation::setBackgroundColor(uint16_t color) { _backgroundColor = col
 void MicroAnimation::setFrameDelay(uint16_t delay) { _frameDelay = delay; }
 
 void MicroAnimation::drawFrame(int frameNumber) {
-  uint16_t dataOffset = pgm_read_word(_data + 3 + frameNumber * 2);
+  uint16_t dataOffset = pgm_read_word(_data + 4 + frameNumber * 2);
   doDrawFrame(_data + dataOffset, _display, _x, _y, getWidth(), getHeight(), _backgroundColor,
               _color);
 #ifdef _Adafruit_SSD1306_H_
@@ -184,19 +184,37 @@ void doDrawRleFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16
         runLength = (runLength << 7) | (rlByte & 0b01111111);
       }
     }
-    if (color == FG || (useDeltaCompression && color == BG)) {
-      uint16_t pixelColor = color == FG ? drawColor : bgColor;
-      uint16_t index = startPixel;
-      uint16_t remainingLength = runLength;
-      while (remainingLength > 0) {
-        uint16_t lineLength = min(remainingLength, w - (index % w));
-        display->drawFastHLine(x + (index % w), y + (index / w), lineLength, pixelColor);
-        index += lineLength;
-        remainingLength -= lineLength;
+    if (runLength == 0) {
+      uint8_t escapedByte = 0;
+      uint8_t multi = 0;
+      do {
+        escapedByte = pgm_read_byte(data + idx++);
+        multi = escapedByte & MULTIBYTE_FLAG;
+        for (uint8_t i = 0; i < 7; i++) {
+          lastColor = escapedByte & 0x40;
+          if (lastColor || useDeltaCompression) {
+            uint16_t pixelColor = lastColor ? drawColor : bgColor;
+            display->drawPixel(x + (startPixel % w), y + (startPixel / w), pixelColor);
+          }
+          escapedByte <<= 1;
+          startPixel++;
+        }
+      } while (multi);
+    } else {
+      if (color == FG || (useDeltaCompression && color == BG)) {
+        uint16_t pixelColor = color == FG ? drawColor : bgColor;
+        uint16_t index = startPixel;
+        uint16_t remainingLength = runLength;
+        while (remainingLength > 0) {
+          uint16_t lineLength = min(remainingLength, w - (index % w));
+          display->drawFastHLine(x + (index % w), y + (index / w), lineLength, pixelColor);
+          index += lineLength;
+          remainingLength -= lineLength;
+        }
       }
+      lastColor = color;
+      startPixel += runLength;
     }
-    lastColor = color;
-    startPixel += runLength;
   }
   display->endWrite();
 }
