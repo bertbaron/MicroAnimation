@@ -16,7 +16,7 @@ public:
   void drawFrame(int frameNumber);
 
   void setFrameDelay(uint16_t delay);
-  void setPosition(uint16_t x, uint16_t y);
+  void setPosition(int16_t x, int16_t y);
   void setColor(uint16_t color);
   void setBackgroundColor(uint16_t color);
 
@@ -75,7 +75,7 @@ public:
 private:
   const uint8_t *_data;
   Adafruit_GFX *_display;
-  uint16_t _x, _y;
+  int16_t _x, _y;
   uint16_t _color;
   uint16_t _backgroundColor;
   uint16_t _frameDelay;
