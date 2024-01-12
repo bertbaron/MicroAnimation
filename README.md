@@ -1,4 +1,4 @@
-# Arduino Library to play compressed Animations
+# MicroAnimation, an Arduino Library to play compressed animated icons on small devices
 
 [![](https://img.shields.io/badge/Available_in_the_Arduino_Library_Manager-2ea44f)](<Link>)
 
