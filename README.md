@@ -12,7 +12,7 @@ As a bonus this library provides an easy API to deal with animations in differen
 
 Run Length Encoding is very simple and fast to decompres, and it doesn't require RAM for lookup tables. Most of the time, especially when the animation is very well compressible, the decompression is faster than drawing the uncompressed bitmap because fewer operations need to be sent to the display. In some cases it might be somewhat slower though.
 
-The [Arduino Animation Compressor](https://bertbaron.github.io/arduino-animation-compressor/) will try to find the best compressen method for each frame. In case it doesn't succeed in compressing a frame, it will just store the uncompressed bitmap, resulting in only marginal overhead in terms of memory and performance.
+The [Arduino Animation Compressor](https://bertbaron.github.io/arduino-animation-compressor/) will try to find the best compression method for each frame. In case it doesn't succeed in compressing a frame, it will just store the uncompressed bitmap, resulting in only marginal overhead in terms of memory and performance.
 
 ## Usage
 
