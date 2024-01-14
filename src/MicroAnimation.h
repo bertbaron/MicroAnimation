@@ -46,6 +46,11 @@ public:
   void abort(bool waitForLoopCycle = false);
 
   /*!
+   * @brief Pauses the animation, pauze(false) will resume the animation.
+   */
+  void pause(bool pause = true);
+
+  /*!
    * @brief Updates the animation, potentially drawing a new frame.
    *        Does nothing if the animation is not running.
    *        This is typically called in the loop() function.
@@ -62,6 +67,11 @@ public:
    * @brief Check if the animation is finished normally (not aborted) during the last update() call
    */
   bool isFinished();
+
+  /*!
+   * @brief Check if the animation is pauzed.
+   */
+  bool isPaused();
 
   /*!
    * @brief Specifies a callback-function that is called when the animation is finished.
@@ -82,6 +92,7 @@ private:
   bool _finished;
   bool _loop;
   bool _abort;
+  bool _paused;
   void (*_finishedCallback)();
 
   void _animationFinished();

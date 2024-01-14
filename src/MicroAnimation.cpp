@@ -72,7 +72,7 @@ void MicroAnimation::start(bool loop) {
 
 bool MicroAnimation::update() {
   _finished = false;
-  if (_frame < 0) {
+  if (_frame < 0 || _paused) {
     return false;
   }
   uint16_t now = millis();
@@ -111,6 +111,10 @@ void MicroAnimation::abort(bool waitForLoopCycle) {
   }
 }
 
+void MicroAnimation::pause(bool pause) {
+   _paused = pause;
+}
+
 void MicroAnimation::_animationFinished() {
   if (_finishedCallback != NULL) {
     _finishedCallback();
@@ -123,9 +127,12 @@ void MicroAnimation::_reset(bool finished) {
   _finished = finished;
   _loop = false;
   _abort = false;
+  _paused = false;
 }
 
-bool MicroAnimation::isRunning() { return _frame >= 0; }
+bool MicroAnimation::isRunning() { return _frame >= 0 && !_paused; }
+
+bool MicroAnimation::isPaused() { return _paused; }
 
 bool MicroAnimation::isFinished() { return _finished; }
 

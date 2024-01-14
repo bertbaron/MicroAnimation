@@ -17,7 +17,7 @@ getFrameCount	KEYWORD2
 getWidth	KEYWORD2
 getHeight	KEYWORD2
 drawFrame	KEYWORD2
-setFrameDelay	KEYWORD2
+setFrameRate	KEYWORD2
 setPosition	KEYWORD2
 setColor	KEYWORD2
 setBackgroundColor	KEYWORD2
@@ -25,7 +25,10 @@ play	KEYWORD2
 start	KEYWORD2
 stop	KEYWORD2
 abort	KEYWORD2
+pause	KEYWORD2
 update	KEYWORD2
+isRunning	KEYWORD2
+isPaused	KEYWORD2
 isFinished	KEYWORD2
 onFinish	KEYWORD2
 

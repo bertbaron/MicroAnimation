@@ -33,6 +33,8 @@ byte buttonPins[] = {5, 4, 3};
 bool buttonStates[] = {false, false, false};
 
 int buttonPressed();
+void printCentered(String text, int y);
+void printCentered(String text, int xCenter, int y);
 
 void setup() {
   display.begin(SSD1306_SWITCHCAPVCC, SCREEN_I2C_ADDR);
@@ -43,15 +45,17 @@ void setup() {
   }
 
   // Run animations at different rates
-  animations[0].setFrameDelay(30);
-  animations[1].setFrameDelay(45);
-  animations[2].setFrameDelay(60);
+  animations[0].setFrameRate(35);
+  animations[1].setFrameRate(25); // the default
+  animations[2].setFrameRate(15);
 
   display.clearDisplay();
   printCentered("use buttons to", 40);
   printCentered("toggle animations", 50);
   for (byte i = 0; i < 3; i++) {
     animations[i].drawFrame(0);
+    animations[i].start(true);
+    animations[i].pause();
   }
 }
 
@@ -62,24 +66,20 @@ void loop() {
 
   int button = buttonPressed();
   if (button >= 0) {
-    if (animations[button].isRunning()) {
-      animations[button].stop(true); // stop after finishing current loop cycle
-    } else {
-      animations[button].start(true); // start and loop
-    }
+    animations[button].pause(!animations[button].isPaused());
   }
 }
 
-// Returns index of button when state changes from HIGH to LOW, -1 if no button is pressed
-// for simplicity we assoume no bounce
+unsigned long lastPressed = 0;
 int buttonPressed() {
+  unsigned long now = millis();
+  if (now - lastPressed < 500) {
+    return -1; // handle debounce and accidental repeats
+  }
   for (byte i = 0; i < 3; i++) {
-    bool state = digitalRead(buttonPins[i]);
-    if (state != buttonStates[i]) {
-      buttonStates[i] = state;
-      if (state == LOW) {
-        return i;
-      }
+    if (digitalRead(buttonPins[i]) == LOW) {
+      lastPressed = now;
+      return i;
     }
   }
   return -1;
