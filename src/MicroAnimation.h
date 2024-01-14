@@ -15,7 +15,7 @@ public:
   int getHeight();
   void drawFrame(int frameNumber);
 
-  void setFrameDelay(uint16_t delay);
+  void setFrameRate(uint16_t fps);
   void setPosition(int16_t x, int16_t y);
   void setColor(uint16_t color);
   void setBackgroundColor(uint16_t color);
@@ -24,10 +24,6 @@ public:
    * @brief Play the animation, blocks until done.
    */
   void play();
-
-  /*
-   Functions for non-blocking animation
-   */
 
   /*!
    * @brief Starts the animation.

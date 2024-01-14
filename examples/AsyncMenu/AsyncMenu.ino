@@ -3,11 +3,13 @@
 #include <MicroAnimation.h>
 
 /*
- * More complex example showing how a menu with animated feedback can be implemented without blocking
- * The blinking led shows that the loop is being continued. Processing an animation does have some
- * impact but the led will keep blinking during the animations.
+ * More complex example showing how a menu with animated feedback can be implemented without blocking.
+ * The blinking led shows that the loop is being continued. Processing an animation may affect the
+ * regularity of the blinking depending on the hardware and the complexity of the animation.
  *
  * This also contains an example of using an onFinish callback handler.
+ * 
+ * Please note that the Wokwi simulator is not a good indication of the actual performance on real hardware.
  */
 
 #define SCREEN_WIDTH 128

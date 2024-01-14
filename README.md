@@ -2,7 +2,7 @@
 
 [![](https://img.shields.io/badge/Available_in_the_Arduino_Library_Manager-2ea44f)](<Link>)
 
-Plays compressed monochrome animations created by compressed by the [Arduino Animation Compressor](https://bertbaron.github.io/arduino-animation-compressor/) on Adafruit displays.
+Plays compressed monochrome animations created by compressed by the [MicroAnimationConverter](https://bertbaron.github.io/MicroAnimationConverter/) on Adafruit displays.
 
 Originally added to be able to play animated Icons from https://animator.wokwi.com/ on small devices like the Arduino Micro. Those animations can consume quite some program memory. They are however very compressible with simple Run Length Encoding in combination with Delta Compression.
 
@@ -10,9 +10,9 @@ As a bonus this library provides an easy API to deal with animations in differen
 
 ## Performance
 
-Run Length Encoding is very simple and fast to decompres, and it doesn't require RAM for lookup tables. Most of the time, especially when the animation is very well compressible, the decompression is faster than drawing the uncompressed bitmap because fewer operations need to be sent to the display. In some cases it might be somewhat slower though.
+Run Length Encoding is very simple and fast to decompres, and it doesn't require RAM for lookup tables or extra buffers. Often, especially when the animation is very well compressible, the decompression is faster than drawing the uncompressed bitmap because fewer operations need to be sent to the display, making use of drawFastHLine and skipping the parts that don't change from frame to frame. In some cases it might be somewhat slower though.
 
-The [Arduino Animation Compressor](https://bertbaron.github.io/arduino-animation-compressor/) will try to find the best compression method for each frame. In case it doesn't succeed in compressing a frame, it will just store the uncompressed bitmap, resulting in only marginal overhead in terms of memory and performance.
+The [MicroAnimationConverter](https://bertbaron.github.io/MicroAnimationConverter/) will try to find the best compression method for each frame. In case it doesn't succeed in compressing a frame, it will just store the uncompressed bitmap, resulting in only marginal overhead in terms of memory and performance.
 
 ## Usage
 

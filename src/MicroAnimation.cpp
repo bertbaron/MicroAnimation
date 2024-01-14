@@ -20,7 +20,7 @@ MicroAnimation::MicroAnimation(const uint8_t *data, Adafruit_GFX *display, uint1
   _y = y;
   _color = color;
   _backgroundColor = 0;
-  _frameDelay = 42;
+  _frameDelay = 40; // 25 fps
   _frame = -1;
   _finished = false;
   _finishedCallback = NULL;
@@ -40,7 +40,7 @@ void MicroAnimation::setPosition(int16_t x, int16_t y) {
 
 void MicroAnimation::setColor(uint16_t color) { _color = color; }
 void MicroAnimation::setBackgroundColor(uint16_t color) { _backgroundColor = color; }
-void MicroAnimation::setFrameDelay(uint16_t delay) { _frameDelay = delay; }
+void MicroAnimation::setFrameRate(uint16_t fps) { _frameDelay = 1000 / fps; }
 
 void MicroAnimation::drawFrame(int frameNumber) {
   uint16_t dataOffset = pgm_read_word(_data + 4 + frameNumber * 2);
