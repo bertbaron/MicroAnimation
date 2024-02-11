@@ -1,6 +1,6 @@
 # MicroAnimation, an Arduino Library to play compressed animated icons on small devices
 
-[![](https://img.shields.io/badge/Available_in_the_Arduino_Library_Manager-2ea44f)](<Link>)
+[![](https://img.shields.io/badge/Available_in_the_Arduino_Library_Manager-2ea44f)](https://www.arduino.cc/reference/en/libraries/microanimation/)
 
 Plays compressed monochrome animations created by compressed by the [MicroAnimationConverter](https://bertbaron.github.io/MicroAnimationConverter/) on Adafruit displays.
 

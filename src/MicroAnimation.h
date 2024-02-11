@@ -7,17 +7,58 @@
 class MicroAnimation
 {
 public:
+
+    /*!
+     * @brief Creates a new animation object.
+     * @param data The animation data.
+     * @param display The display on which the animation is to be drawn.
+     * @param x The x-position of the animation on the display.
+     * @param y The y-position of the animation on the display.
+     * @param color The color in which the animation is drawn.
+     */
   MicroAnimation(const uint8_t *data, Adafruit_GFX *display, uint16_t x = 0, uint16_t y = 0,
                  uint16_t color = 1);
 
+  /*!
+   * @brief Get the number of frames in the animation.
+   */
   int getFrameCount();
+
+  /*!
+   * @brief Get the width of the animation.
+   */
   int getWidth();
+
+    /*!
+     * @brief Get the height of the animation.
+     */
   int getHeight();
+
+    /*!
+     * @brief Draws the specified frame. Note that delta frames can only be drawn in order starting from frame 0 or
+     another non-delta frame. Other frames can be drawn in any order.
+     */
   void drawFrame(int frameNumber);
 
+    /*!
+     * @brief Set the frame rate of the animation.
+     * @param fps The frame rate in frames per second.
+     */
   void setFrameRate(uint16_t fps);
+
+    /*!
+     * @brief Sets the position of the animation on the display.
+     */
   void setPosition(int16_t x, int16_t y);
+
+    /*!
+     * @brief Sets the color in which the animation is drawn.
+     */
   void setColor(uint16_t color);
+
+    /*!
+     * @brief Sets the background color of the animation.
+     */
   void setBackgroundColor(uint16_t color);
 
   /*!
