@@ -1,31 +1,11 @@
 #include "MicroAnimation.h"
 
-#include <Adafruit_GFX.h>
 #include <Arduino.h>
 
-#if __has_include(<Adafruit_SSD1306.h>)
-#include <Adafruit_SSD1306.h>
-#endif
-
-void doDrawFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16_t y, int16_t w,
+void doDrawFrame(const uint8_t *data, Display &display, int16_t x, int16_t y, int16_t w,
                  int16_t h, uint16_t bgColor, uint16_t color);
-void doDrawRleFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16_t y, int16_t w,
+void doDrawRleFrame(const uint8_t *data, Display &display, int16_t x, int16_t y, int16_t w,
                     int16_t h, uint16_t bgColor, uint16_t color);
-
-MicroAnimation::MicroAnimation(const uint8_t *data, Adafruit_GFX *display, uint16_t x, uint16_t y,
-                               uint16_t color) {
-  _data = data;
-  _display = display;
-  _x = x;
-  _y = y;
-  _color = color;
-  _backgroundColor = 0;
-  _frameDelay = 40; // 25 fps
-  _frame = -1;
-  _finished = false;
-  _finishedCallback = NULL;
-  _lastFrameTime = 0;
-}
 
 int MicroAnimation::getFrameCount() { return pgm_read_byte(_data + 1); }
 
@@ -46,9 +26,7 @@ void MicroAnimation::drawFrame(int frameNumber) {
   uint16_t dataOffset = pgm_read_word(_data + 4 + frameNumber * 2);
   doDrawFrame(_data + dataOffset, _display, _x, _y, getWidth(), getHeight(), _backgroundColor,
               _color);
-#ifdef _Adafruit_SSD1306_H_
-  ((Adafruit_SSD1306 *)_display)->display();
-#endif
+  _display.display();
 }
 
 void MicroAnimation::play() {
@@ -153,18 +131,18 @@ void MicroAnimation::onFinish(void (*finishedCallback)()) { _finishedCallback = 
  * Frame format:
  * 1 byte: frame type | initial color
  */
-void doDrawFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16_t y, int16_t w,
+void doDrawFrame(const uint8_t *data, Display &display, int16_t x, int16_t y, int16_t w,
                  int16_t h, uint16_t bgColor, uint16_t color) {
   uint8_t type = pgm_read_byte(data);
   if ((type & FRAME_TYPE_MASK) == FRAME_TYPE_UNCOMPRESSED) {
-    display->fillRect(x, y, w, h, bgColor);
-    display->drawBitmap(x, y, data + 1, w, h, color);
+    display.fillRect(x, y, w, h, bgColor);
+    display.drawBitmap(x, y, data + 1, w, h, color);
   } else {
     doDrawRleFrame(data, display, x, y, w, h, bgColor, color);
   }
 }
 
-void doDrawRleFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16_t y, int16_t w,
+void doDrawRleFrame(const uint8_t *data, Display &display, int16_t x, int16_t y, int16_t w,
                     int16_t h, uint16_t bgColor, uint16_t drawColor) {
   uint8_t type = pgm_read_byte(data);
   const bool isDelta = (type & FRAME_TYPE_MASK) == FRAME_TYPE_RLE_DELTA;
@@ -172,10 +150,10 @@ void doDrawRleFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16
   int16_t startPixel = 0;
   uint16_t idx = 1;
 
-  display->startWrite();
+  display.startWrite();
 
   if (!isDelta) {
-    display->fillRect(x, y, w, h, bgColor);
+    display.fillRect(x, y, w, h, bgColor);
   }
 
   while (startPixel < w * h) {
@@ -195,7 +173,7 @@ void doDrawRleFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16
           color = bits & 0x40;
           if (color || isDelta) {
             uint16_t pixelColor = color ? drawColor : bgColor;
-            display->drawPixel(x + (startPixel % w), y + (startPixel / w), pixelColor);
+            display.drawPixel(x + (startPixel % w), y + (startPixel / w), pixelColor);
           }
           bits <<= 1;
           startPixel++;
@@ -210,7 +188,7 @@ void doDrawRleFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16
       uint16_t remainingLength = runLength;
       while (remainingLength > 0) {
         uint16_t lineLength = min(remainingLength, uint16_t(w - (index % w)));
-        display->drawFastHLine(x + (index % w), y + (index / w), lineLength, pixelColor);
+        display.drawFastHLine(x + (index % w), y + (index / w), lineLength, pixelColor);
         index += lineLength;
         remainingLength -= lineLength;
       }
@@ -218,5 +196,5 @@ void doDrawRleFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16
     lastColor = color;
     startPixel += runLength;
   }
-  display->endWrite();
+  display.endWrite();
 }

@@ -3,21 +3,32 @@
 #include <Adafruit_GFX.h>
 
 #include "Arduino.h"
+#include "Display.h"
 
-class MicroAnimation
-{
-public:
-
-    /*!
-     * @brief Creates a new animation object.
-     * @param data The animation data.
-     * @param display The display on which the animation is to be drawn.
-     * @param x The x-position of the animation on the display.
-     * @param y The y-position of the animation on the display.
-     * @param color The color in which the animation is drawn.
-     */
-  MicroAnimation(const uint8_t *data, Adafruit_GFX *display, uint16_t x = 0, uint16_t y = 0,
-                 uint16_t color = 1);
+class MicroAnimation {
+ public:
+  /*!
+   * @brief Creates a new animation object.
+   * @param data The animation data.
+   * @param display The display on which the animation is to be drawn.
+   * @param x The x-position of the animation on the display.
+   * @param y The y-position of the animation on the display.
+   * @param color The color in which the animation is drawn.
+   */
+  MicroAnimation(const uint8_t *data, Display &&display, uint16_t x = 0, uint16_t y = 0,
+                 uint16_t color = 1)
+      : _data(data),
+        _display(display),
+        _x(x),
+        _y(y),
+        _color(color),
+        _backgroundColor(0),
+        _frameDelay(40),  // 25 fps
+        _frame(-1),
+        _finished(false),
+        _finishedCallback(NULL),
+        _lastFrameTime(0)
+         {};
 
   /*!
    * @brief Get the number of frames in the animation.
@@ -29,36 +40,36 @@ public:
    */
   int getWidth();
 
-    /*!
-     * @brief Get the height of the animation.
-     */
+  /*!
+   * @brief Get the height of the animation.
+   */
   int getHeight();
 
-    /*!
-     * @brief Draws the specified frame. Note that delta frames can only be drawn in order starting from frame 0 or
-     another non-delta frame. Other frames can be drawn in any order.
-     */
+  /*!
+   * @brief Draws the specified frame. Note that delta frames can only be drawn in order starting
+   from frame 0 or another non-delta frame. Other frames can be drawn in any order.
+   */
   void drawFrame(int frameNumber);
 
-    /*!
-     * @brief Set the frame rate of the animation.
-     * @param fps The frame rate in frames per second.
-     */
+  /*!
+   * @brief Set the frame rate of the animation.
+   * @param fps The frame rate in frames per second.
+   */
   void setFrameRate(uint16_t fps);
 
-    /*!
-     * @brief Sets the position of the animation on the display.
-     */
+  /*!
+   * @brief Sets the position of the animation on the display.
+   */
   void setPosition(int16_t x, int16_t y);
 
-    /*!
-     * @brief Sets the color in which the animation is drawn.
-     */
+  /*!
+   * @brief Sets the color in which the animation is drawn.
+   */
   void setColor(uint16_t color);
 
-    /*!
-     * @brief Sets the background color of the animation.
-     */
+  /*!
+   * @brief Sets the background color of the animation.
+   */
   void setBackgroundColor(uint16_t color);
 
   /*!
@@ -75,14 +86,16 @@ public:
   /*!
    * @brief Stops the animation, optionally waiting for the current loop cycle to finish.
    *        The animation will be considered finished and the optional callback will be called.
-   * @param waitForLoopCycle If true, the animation will stop after the current loop cycle has finished.
+   * @param waitForLoopCycle If true, the animation will stop after the current loop cycle has
+   * finished.
    */
   void stop(bool waitForLoopCycle = false);
 
   /*!
    * @brief Stops the animation, optionally waiting for the current loop cycle to finish.
    *        The finished flag will not be set and the optional callback will not be called.
-   * @param waitForLoopCycle If true, the animation will stop after the current loop cycle has finished.
+   * @param waitForLoopCycle If true, the animation will stop after the current loop cycle has
+   * finished.
    */
   void abort(bool waitForLoopCycle = false);
 
@@ -119,22 +132,22 @@ public:
    */
   void onFinish(void (*finishedCallback)());
 
-private:
+ private:
   const uint8_t *_data;
-  Adafruit_GFX *_display;
+  Display &_display;
   int16_t _x, _y;
   uint16_t _color;
   uint16_t _backgroundColor;
   uint16_t _frameDelay;
 
-  // state for non-blocking animation
   int _frame;
-  uint32_t _lastFrameTime;
   bool _finished;
+  void (*_finishedCallback)();
+  uint32_t _lastFrameTime;
+
   bool _loop;
   bool _abort;
   bool _paused;
-  void (*_finishedCallback)();
 
   void _animationFinished();
   void _reset(bool finished);
