@@ -209,7 +209,7 @@ void doDrawRleFrame(const uint8_t *data, Adafruit_GFX *display, int16_t x, int16
       uint16_t index = startPixel;
       uint16_t remainingLength = runLength;
       while (remainingLength > 0) {
-        uint16_t lineLength = min(remainingLength, w - (index % w));
+        uint16_t lineLength = min(remainingLength, uint16_t(w - (index % w)));
         display->drawFastHLine(x + (index % w), y + (index / w), lineLength, pixelColor);
         index += lineLength;
         remainingLength -= lineLength;
