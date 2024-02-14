@@ -1,6 +1,9 @@
 #include <Adafruit_SSD1306.h>
 #include <Arduino.h>
 #include <MicroAnimation.h>
+#include <adapters/SSD1306_Display.h>
+
+// Test it here (copy this code): https://wokwi.com/projects/386250018661621761
 
 /*
  * The forground- and background color are both configurable
@@ -19,7 +22,7 @@ const byte PROGMEM animationData[] = {0,28,48,48,60,0,17,1,86,1,230,1,165,2,111,
 // clang-format on
 
 // configure black as drawing color, can also be set/overwritten later
-MicroAnimation animation(animationData, &display, 40, 8, SSD1306_BLACK);
+MicroAnimation animation(animationData, SSD1306_Display(display), 40, 8, SSD1306_BLACK);
 
 void setup() {
   display.begin(SSD1306_SWITCHCAPVCC, SCREEN_I2C_ADDR);

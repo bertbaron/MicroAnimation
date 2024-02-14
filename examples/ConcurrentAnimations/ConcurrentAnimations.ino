@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include <Adafruit_SSD1306.h>
 #include <MicroAnimation.h>
+#include <adapters/SSD1306_Display.h>
+
+// Test it here (copy this code): https://wokwi.com/projects/386250018661621761
 
 /*
  * Multiple animations can just run concurrently and also concurrent with other
@@ -24,9 +27,9 @@ const byte PROGMEM animationData[] = {0,28,32,32,60,0,173,0,198,0,246,0,43,1,108
 // clang-format on
 
 MicroAnimation animations[] = {
-    MicroAnimation(animationData, &display, 0, 0),
-    MicroAnimation(animationData, &display, 48, 0),
-    MicroAnimation(animationData, &display, 96, 0),
+    MicroAnimation(animationData, SSD1306_Display(display), 0, 0),
+    MicroAnimation(animationData, SSD1306_Display(display), 48, 0),
+    MicroAnimation(animationData, SSD1306_Display(display), 96, 0),
 };
 
 byte buttonPins[] = {5, 4, 3};
