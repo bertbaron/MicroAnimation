@@ -20,4 +20,4 @@ Please see the examples for more information. All examples can be tested with th
 
 ## Supported Displays
 
-Currently only tested with the SSD1306. Feature/pull requests for other displays are welcome. The same goes for other types of displays.
+Currently only tested with the SSD1306 and SSD1331. Feature/pull requests for other displays are welcome.
