@@ -108,7 +108,7 @@ class MicroAnimation {
    * @brief Updates the animation, potentially drawing a new frame.
    *        Does nothing if the animation is not running.
    *        This is typically called in the loop() function.
-   * @return True if the animation is running.
+   * @return True if a (new) frame was drawn, false otherwise.
    */
   bool update();
 

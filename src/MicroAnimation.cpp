@@ -53,10 +53,12 @@ bool MicroAnimation::update() {
   if (_frame < 0 || _paused) {
     return false;
   }
+  bool result = false;
   uint16_t now = millis();
   if (now - _lastFrameTime >= _frameDelay) {
     drawFrame(_frame++);
     _lastFrameTime = now;
+    result = true;
     if (_frame >= getFrameCount()) {
       if (_loop) {
         _frame = 0;
@@ -69,7 +71,7 @@ bool MicroAnimation::update() {
       }
     }
   }
-  return !_finished;
+  return result;
 }
 
 void MicroAnimation::stop(bool waitForLoopCycle) {
