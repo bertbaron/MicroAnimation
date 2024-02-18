@@ -2,9 +2,9 @@
 
 [![](https://img.shields.io/badge/Available_in_the_Arduino_Library_Manager-2ea44f)](https://www.arduino.cc/reference/en/libraries/microanimation/)
 
-Plays compressed monochrome animations created by compressed by the [MicroAnimationConverter](https://bertbaron.github.io/MicroAnimationConverter/) on Adafruit displays.
+Plays compressed monochrome animations created by the [MicroAnimationConverter](https://bertbaron.github.io/MicroAnimationConverter/) on TFT/OLED displays.
 
-Originally added to be able to play animated Icons from https://animator.wokwi.com/ on small devices like the Arduino Micro. Those animations can consume quite some program memory. They are however very compressible with simple Run Length Encoding in combination with Delta Compression.
+Originally added to be able to play multiple animated Icons from https://animator.wokwi.com/ on small devices like the Arduino Micro. Those animations can consume quite some program memory. They are however very compressible with simple Run Length Encoding in combination with Delta Compression.
 
 As a bonus this library provides an easy API to deal with animations in different use cases. 
 
